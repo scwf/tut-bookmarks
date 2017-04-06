@@ -53,6 +53,16 @@ public class ApplicationTests {
 		Map<String, Object> token = testRestTemplate
 			.postForObject("/oauth/token", request, Map.class);
 		assertNotNull("Wrong response: " + token, token.get("access_token"));
+
+		String accessToken = token.get("access_token").toString();
+		String tokenType = token.get("token_type").toString();
+		request.set("access_token", accessToken);
+		request.set("token_type", tokenType);
+//		Resources br1 =
+//		  testRestTemplate.postForObject("/bookmarks", request, Resources.class);
+//		Resources resources = testRestTemplate.getForObject("/bookmarks", Resources.class);
+		String res = testRestTemplate.postForObject("/v1.0/databases", request, String.class);
+		assert(res.equals("database created"));
 	}
 
 	@TestConfiguration
