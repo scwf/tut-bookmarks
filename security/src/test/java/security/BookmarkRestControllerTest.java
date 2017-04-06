@@ -1,6 +1,6 @@
 package security;
 
-import bookmarks.Application;
+import bookmarks.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,9 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.Filter;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertNotNull;
@@ -45,6 +47,16 @@ public class BookmarkRestControllerTest {
 
     private String userName = "jhoeller";
 
+    private Account account;
+
+    private List<Bookmark> bookmarkList = new ArrayList<>();
+
+    @Autowired
+    private BookmarkRepository bookmarkRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
     @Autowired
@@ -68,6 +80,13 @@ public class BookmarkRestControllerTest {
     @Before
     public void setup() throws Exception {
         this.mockMvc = webAppContextSetup(webApplicationContext).addFilter(springSecurityFilterChain).build();
+        this.bookmarkRepository.deleteAllInBatch();
+        this.accountRepository.deleteAllInBatch();
+
+        this.account = accountRepository.save(new Account(userName, "password"));
+        this.bookmarkList.add(bookmarkRepository.save(new Bookmark(account, "http://bookmark.com/1/" + userName, "A description")));
+        this.bookmarkList.add(bookmarkRepository.save(new Bookmark(account, "http://bookmark.com/2/" + userName, "A description")));
+
     }
 
     @Test
@@ -80,6 +99,29 @@ public class BookmarkRestControllerTest {
     @Test
     public void testgetToken() throws Exception {
         System.out.println(getAccessToken());
+    }
+
+    @Test
+    public void bookmarkAuthorized() throws Exception {
+        String accessToken = getAccessToken();
+        System.out.println(accessToken);
+        String bookmarkJson = json(new Bookmark(
+                this.account, "http://spring.io", "a bookmark to the best resource for Spring news and information"));
+
+        mockMvc.perform(get("/bookmarks")
+                .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk()).andDo(print());
+
+        mockMvc.perform(get("/bookmarks/"+this.bookmarkList.get(0).getId())
+                .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk()).andDo(print());
+
+        mockMvc.perform(
+                post("/bookmarks")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .content(bookmarkJson)
+                        .contentType(contentType))
+                .andExpect(status().isCreated()).andDo(print());
     }
 
     @Test
@@ -97,6 +139,13 @@ public class BookmarkRestControllerTest {
 
         mockMvc.perform(delete("/v1.0/databases/1")
                 .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk()).andDo(print());
+
+        mockMvc.perform(
+                post("/v1.0/databases/1/jobs/sql")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .content(this.json(new ExecutionSQL("select * from wf")))
+                        .contentType(contentType))
                 .andExpect(status().isOk()).andDo(print());
     }
 
@@ -119,7 +168,7 @@ public class BookmarkRestControllerTest {
                         .param("client_id", "android-bookmarks")
                         .param("client_secret", "123456")
                         .param("grant_type", "password")
-                        .param("username", "jlong")
+                        .param("username", "jhoeller")
                         .param("password", "password"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
@@ -129,7 +178,6 @@ public class BookmarkRestControllerTest {
                 .andExpect(jsonPath("$.expires_in", is(greaterThan(4000))))
                 .andExpect(jsonPath("$.scope", is(equalTo("write"))))
                 .andReturn().getResponse().getContentAsString();
-
         // @formatter:on
         System.out.println("content: " + content);
 
