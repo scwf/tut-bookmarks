@@ -15,9 +15,7 @@
  */
 package security;
 
-import bookmarks.Account;
 import bookmarks.Application;
-import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +28,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.Base64Utils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
