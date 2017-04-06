@@ -87,11 +87,9 @@ public class BookmarkRestControllerTest {
         String accessToken = getAccessToken();
         System.out.println(accessToken);
 
-        // @formatter:off
         mockMvc.perform(get("/v1.0/databases")
                 .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk()).andDo(print());
-        // @formatter:on
 
         mockMvc.perform(post("/v1.0/databases")
                 .header("Authorization", "Bearer " + accessToken))
