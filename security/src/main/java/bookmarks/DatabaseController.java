@@ -3,10 +3,7 @@ package bookmarks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.Principal;
@@ -25,8 +22,22 @@ public class DatabaseController {
     @RequestMapping(method = RequestMethod.POST)
     String createDatabase(Principal principal) {
         this.validateUser(principal);
-
+        System.out.println("create database call");
         return "database created";
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    String listDatabase(Principal principal) {
+        this.validateUser(principal);
+        System.out.println("list database call");
+        return "database list: a, b";
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{databaseId}")
+    String deleteDatabase(Principal principal, @PathVariable Long databaseId) {
+        this.validateUser(principal);
+        System.out.println("delete database call");
+        return "database delete: " + databaseId;
     }
 
     private void validateUser(Principal principal) {
