@@ -23,6 +23,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
 
@@ -92,6 +93,8 @@ public class BookmarkRestControllerTest {
 
     @Test
     public void readSingleBookmark() throws Exception {
+        mockMvc.perform(get("/" + userName + "/bookmarks/"
+                + this.bookmarkList.get(0).getId())).andDo(print());
         mockMvc.perform(get("/" + userName + "/bookmarks/"
                 + this.bookmarkList.get(0).getId()))
                 .andExpect(status().isOk())
