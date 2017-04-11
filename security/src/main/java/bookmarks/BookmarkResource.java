@@ -15,6 +15,7 @@
  */
 package bookmarks;
 
+import bookmarks.model.Bookmark;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 

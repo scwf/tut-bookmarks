@@ -1,6 +1,4 @@
-package bookmarks;
-
-import javax.persistence.Entity;
+package bookmarks.model;
 
 /**
  * Created by w00228970 on 2017/4/6.

@@ -20,10 +20,7 @@
 	</properties>
 
 	<modules>
-		<module>rest</module>
 		<module>security</module>
-		<module>model</module>
-		<module>hateoas</module>
 	</modules>
 
 	<dependencies>

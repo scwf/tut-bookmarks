@@ -15,6 +15,7 @@
  */
 package bookmarks;
 
+import bookmarks.model.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

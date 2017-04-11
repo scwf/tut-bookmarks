@@ -15,6 +15,9 @@
  */
 package bookmarks;
 
+import bookmarks.model.AccountRepository;
+import bookmarks.model.Bookmark;
+import bookmarks.model.BookmarkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;

@@ -1,5 +1,9 @@
 package bookmarks;
 
+import bookmarks.model.Account;
+import bookmarks.model.AccountRepository;
+import bookmarks.model.Bookmark;
+import bookmarks.model.BookmarkRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
